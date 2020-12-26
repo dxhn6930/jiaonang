@@ -69,20 +69,20 @@ module.exports = app => {
         const user = await AdminUser.findOne({
             username
         }).select('+password')
-        assert(user, 422, '用户名不存在')
-        // if (!user) {
-        //     return res.status(422).send({
-        //         message: '用户名不存在'
-        //     })
-        // }
+        // assert(user, 422, '用户名不存在')
+        if (!user) {
+            return res.status(422).send({
+                message: '用户名不存在'
+            })
+        }
         // 2校验密码
         const isValid = require('bcrypt').compareSync(password, user.password)
-        assert(isValid, 422, '密码错误')
-        // if (!isValid) {
-        //     return res.status(422).send({
-        //         message: '密码错误'
-        //     })
-        // }
+        // assert(isValid, 422, '密码错误')
+        if (!isValid) {
+            return res.status(422).send({
+                message: '密码错误'
+            })
+        }
         // 3返回token
         const token = jwt.sign({id: user._id}, app.get('secret'))
         res.send({token})

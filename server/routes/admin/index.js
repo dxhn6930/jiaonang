@@ -56,10 +56,12 @@ module.exports = app => {
     }, router)
 
     const multer = require('multer')
+    const fs = require('fs')
     const upload = multer({ dest: __dirname + '/../../upload' })
     app.post('/admin/api/upload', auth, upload.single('file'), async (req, res) => {
         const file = req.file
-        file.url = `http://yinyuejn.com/upload/${file.filename}`
+        file.url = `http://yinyuejn.com/upload/${file.originalname}`
+        fs.renameSync(file.path, `upload/${file.originalname}`)
         res.send(file)
     })
 
